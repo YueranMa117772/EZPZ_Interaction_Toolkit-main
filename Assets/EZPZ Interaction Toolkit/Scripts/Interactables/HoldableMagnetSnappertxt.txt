@@ -71,7 +71,7 @@ public class HoldableMagnetSnapper : MonoBehaviour
     {
         if (!snapFlag)
         {
-            if (subject.myMagnetSnapper == null)
+            if (!subject.moving && subject.myMagnetSnapper == null)
             {
                 Vector3 attachPos = snappingPoint.position;
                 subject.myMagnetSnapper = this;
