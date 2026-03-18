@@ -3,7 +3,6 @@ using UnityEngine;
 public class glyphboardinput : MonoBehaviour
 {
     public glyphuniversecenter universecenter;
-
     public bool shiftactive = false;
 
     public void receivebasecharacter(string basecharacter)
@@ -13,9 +12,7 @@ public class glyphboardinput : MonoBehaviour
         string finalchar = basecharacter;
 
         if (shiftactive && basecharacter.Length == 1)
-        {
             finalchar = basecharacter.ToUpper();
-        }
 
         universecenter.spawnglyph(finalchar);
     }

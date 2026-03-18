@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using TMPro;
 
 public class glyphuniversecenter : MonoBehaviour
@@ -14,6 +14,7 @@ public class glyphuniversecenter : MonoBehaviour
     public carriagecontroller carriage;
 
     float currentoffset = 0f;
+    public float lastadvance = 0f;
 
     public void spawnglyph(string character)
     {
@@ -23,27 +24,16 @@ public class glyphuniversecenter : MonoBehaviour
 
         updateuniversecenter();
 
-        glyphadvance a = glyphprefab.GetComponent<glyphadvance>();
-        if (a == null) return;
-
-        currentoffset += a.advance;
-
-        if (carriage != null)
-            carriage.setoffset(currentoffset);
-
         Vector3 spawnpos =
             universecenter.position +
             universecenter.right * currentoffset;
 
         if (!isinsidepaperarea(spawnpos)) return;
 
-        Quaternion glyphrot =
-            universecenter.rotation * Quaternion.Euler(0f, 180f, 0f);
-
         GameObject g = Instantiate(
             glyphprefab,
             spawnpos,
-            glyphrot,
+            universecenter.rotation,
             glyphboardroot
         );
 
@@ -51,22 +41,23 @@ public class glyphuniversecenter : MonoBehaviour
         if (t == null) t = g.GetComponentInChildren<TMP_Text>();
 
         if (t != null) t.text = character;
+
+        glyphadvance a = g.GetComponent<glyphadvance>();
+        if (a != null)
+        {
+            lastadvance = a.advance;
+            currentoffset += a.advance;
+        }
+        else
+        {
+            lastadvance = 0f;
+        }
     }
 
-    public void backspace()
+    public void advancecarriage()
     {
-        if (glyphprefab == null) return;
-
-        glyphadvance a = glyphprefab.GetComponent<glyphadvance>();
-        if (a == null) return;
-
-        currentoffset += a.backadvance();
-
-        if (currentoffset < 0f)
-            currentoffset = 0f;
-
         if (carriage != null)
-            carriage.setoffset(currentoffset);
+            carriage.advance(lastadvance);
     }
 
     bool isinsidepaperarea(Vector3 worldpos)

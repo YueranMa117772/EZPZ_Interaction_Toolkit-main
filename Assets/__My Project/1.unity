@@ -176,11 +176,11 @@ Transform:
   m_GameObject: {fileID: 322357614}
   serializedVersion: 2
   m_LocalRotation: {x: 0.033819567, y: -0, z: -0, w: 0.999428}
-  m_LocalPosition: {x: 0.00098111, y: -0.0051648617, z: 0.0733}
+  m_LocalPosition: {x: 0.00098111, y: 0.8972022, z: 0.09904667}
   m_LocalScale: {x: 0.5482546, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1909201866}
+  m_Father: {fileID: 3357806403591409462}
   m_LocalEulerAnglesHint: {x: 3.876, y: 0, z: 0}
 --- !u!65 &322357616
 BoxCollider:
@@ -197,7 +197,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -421,6 +421,38 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1909201866}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &554255594
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 554255595}
+  m_Layer: 0
+  m_Name: snaproot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &554255595
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 554255594}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.265, y: 1.51963, z: 0.06546}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1601055179}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &806661902
 GameObject:
@@ -668,18 +700,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 7464891859598452670}
-        m_TargetAssemblyTypeName: keycharactersender, Assembly-CSharp
-        m_MethodName: sendcharacter
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   onPrimaryInteractLift:
     m_PersistentCalls:
       m_Calls:
@@ -698,6 +718,18 @@ MonoBehaviour:
       - m_Target: {fileID: 5480115108543816784}
         m_TargetAssemblyTypeName: typeslugrotate, Assembly-CSharp
         m_MethodName: ReleaseKey
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7464891859598452670}
+        m_TargetAssemblyTypeName: keycharactersender, Assembly-CSharp
+        m_MethodName: sendcharacter
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -779,6 +811,37 @@ MonoBehaviour:
   pressDistance: 0.01
   pressSpeed: 0.1
   returnSpeed: 0.1
+--- !u!1 &1396612375
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1396612376}
+  m_Layer: 0
+  m_Name: glyphhistoryroot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1396612376
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1396612375}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1909201866}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1558249538
 GameObject:
   m_ObjectHideFlags: 0
@@ -810,7 +873,7 @@ Transform:
   m_Children:
   - {fileID: 1665021497423484597}
   - {fileID: 6400029948692022498}
-  m_Father: {fileID: 920801446761629653}
+  m_Father: {fileID: 3357806403591409462}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1601055178
 GameObject:
@@ -839,11 +902,11 @@ Transform:
   m_GameObject: {fileID: 1601055178}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.876, z: -0.052}
+  m_LocalPosition: {x: 0.04374, y: 0.12837005, z: -0.22146}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 920801446761629653}
+  m_Father: {fileID: 554255595}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1601055180
 MonoBehaviour:
@@ -924,8 +987,74 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.42440885, y: 0.12485194, z: 0.13033284}
-  m_Center: {x: -0.002758225, y: -0.04641565, z: -0.018543905}
+  m_Size: {x: 1.0327919, y: 0.3300067, z: 0.47016647}
+  m_Center: {x: 0.00721097, y: 0.056161717, z: -0.04115425}
+--- !u!1 &1635379977
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1635379978}
+  - component: {fileID: 1635379980}
+  - component: {fileID: 1635379979}
+  m_Layer: 0
+  m_Name: boardcontroller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1635379978
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635379977}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1909201866}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1635379979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635379977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 977b0b5f3307ca141ac973f962a1b9af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::glyphuniversecenter
+  universecenter: {fileID: 480274156}
+  glyphboardroot: {fileID: 1396612376}
+  glyphprefab: {fileID: 5662009738584684946, guid: 794a5a833d512a043aab9b794c173047, type: 3}
+  shifttarget: {fileID: 0}
+  followshift: 0
+  glyphpaperarea: {fileID: 322357616}
+  carriage: {fileID: 7873372959499873147}
+--- !u!114 &1635379980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635379977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c842a9a789c6a84fbc0d9a52124b77b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::glyphboardinput
+  universecenter: {fileID: 1635379979}
+  shiftactive: 0
 --- !u!1 &1797218277
 GameObject:
   m_ObjectHideFlags: 0
@@ -937,7 +1066,6 @@ GameObject:
   - component: {fileID: 1797218278}
   - component: {fileID: 1797218284}
   - component: {fileID: 1797218283}
-  - component: {fileID: 1797218282}
   - component: {fileID: 1797218286}
   - component: {fileID: 1797218288}
   - component: {fileID: 1797218287}
@@ -963,28 +1091,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &1797218282
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1797218277}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &1797218283
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1360,8 +1466,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1909201866}
-  - component: {fileID: 1909201868}
-  - component: {fileID: 1909201867}
   m_Layer: 0
   m_Name: glyphboard
   m_TagString: Untagged
@@ -1378,48 +1482,16 @@ Transform:
   m_GameObject: {fileID: 1909201865}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.90236706, z: 0.025746679}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 1.7271011, z: 0.077240035}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 480274156}
   - {fileID: 1893003402}
-  - {fileID: 322357615}
-  m_Father: {fileID: 920801446761629653}
+  - {fileID: 1396612376}
+  - {fileID: 1635379978}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1909201867
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1909201865}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 977b0b5f3307ca141ac973f962a1b9af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::glyphuniversecenter
-  universecenter: {fileID: 0}
-  glyphboardroot: {fileID: 0}
-  glyphprefab: {fileID: 0}
-  shifttarget: {fileID: 0}
-  followshift: 1
-  carriagetarget: {fileID: 0}
-  carriagemethod: advanceonestep
---- !u!114 &1909201868
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1909201865}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c842a9a789c6a84fbc0d9a52124b77b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::glyphboardinput
-  universecenter: {fileID: 1909201867}
-  shiftactive: 0
 --- !u!4 &19572109665658415
 Transform:
   m_ObjectHideFlags: 0
@@ -2360,9 +2432,6 @@ Transform:
   - {fileID: 5427095320298483998}
   - {fileID: 6669627598365543502}
   - {fileID: 1047228016042048443}
-  - {fileID: 1601055179}
-  - {fileID: 1909201866}
-  - {fileID: 1558249539}
   - {fileID: 3535508173254072964}
   - {fileID: 4322176050505457774}
   - {fileID: 4127403077317894882}
@@ -4658,10 +4727,12 @@ Transform:
   m_GameObject: {fileID: 7873372959499873146}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.0753, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 322357615}
+  - {fileID: 1558249539}
   - {fileID: 2582987472350280868}
   - {fileID: 8907025411392705292}
   - {fileID: 6859213109853064224}
@@ -8876,6 +8947,10 @@ GameObject:
   - component: {fileID: 943159889862452836}
   - component: {fileID: 1906460215951473195}
   - component: {fileID: 2069388776135803088}
+  - component: {fileID: 7093846609126866473}
+  - component: {fileID: 7093846609126866472}
+  - component: {fileID: 7093846609126866471}
+  - component: {fileID: 7093846609126866470}
   m_Layer: 0
   m_Name: keybackspace
   m_TagString: Untagged
@@ -8883,6 +8958,145 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &7093846609126866470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7093846609126866469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71dcd5d081188f43802358633ccf067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
+  universecenter: {fileID: 1635379979}
+--- !u!114 &7093846609126866471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7093846609126866469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90230c6af4305e8439307242e8f9abe1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressDistance: 0.01
+  pressSpeed: 0.1
+  returnSpeed: 0.1
+--- !u!114 &7093846609126866472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7093846609126866469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 021a70606049ebd4f90ad8b6735c07b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onPrimaryInteract:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7093846609126866471}
+        m_TargetAssemblyTypeName: keypress, Assembly-CSharp
+        m_MethodName: PressKey
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onPrimaryInteractLift:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7093846609126866471}
+        m_TargetAssemblyTypeName: keypress, Assembly-CSharp
+        m_MethodName: ReleaseKey
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7093846609126866470}
+        m_TargetAssemblyTypeName: keybackspacesender, Assembly-CSharp
+        m_MethodName: sendbackspace
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onSecondaryInteract:
+    m_PersistentCalls:
+      m_Calls: []
+  onSecondaryInteractLift:
+    m_PersistentCalls:
+      m_Calls: []
+  onHoverEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  onHoverExit:
+    m_PersistentCalls:
+      m_Calls: []
+  hoverText: 
+  customTouchDistance: -1
+  heldText: 
+  restrictSecondaryToHeldOnly: 0
+  customHoldDistance: -1
+  eventRelay: {fileID: 0}
+  onPrimaryInteractBackground:
+    m_PersistentCalls:
+      m_Calls: []
+  onPrimaryInteractLiftBackground:
+    m_PersistentCalls:
+      m_Calls: []
+  onSecondaryInteractBackground:
+    m_PersistentCalls:
+      m_Calls: []
+  onSecondaryInteractLiftBackground:
+    m_PersistentCalls:
+      m_Calls: []
+  onHoverEnterBackground:
+    m_PersistentCalls:
+      m_Calls: []
+  onHoverExitBackground:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!65 &7093846609126866473
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7093846609126866469}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.032583654, y: 0.007470002, z: 0.032536052}
+  m_Center: {x: 0.0005003711, y: 0.044042483, z: 0.0921921}
 --- !u!33 &7099853371727945235
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -9354,7 +9568,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::keycharactersender
   basecharacter: q
-  board: {fileID: 0}
+  board: {fileID: 1635379980}
 --- !u!23 &7472262439178621147
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9659,6 +9873,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3357806403591409462}
+  - component: {fileID: 7873372959499873147}
   m_Layer: 0
   m_Name: escapement
   m_TagString: Untagged
@@ -9666,6 +9881,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &7873372959499873147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7873372959499873146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17990eb3382f7b84f8d7a567a40409dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::carriagecontroller
+  movespeed: 1
 --- !u!23 &7879647684796065941
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11248,6 +11476,8 @@ SceneRoots:
   - {fileID: 338340859}
   - {fileID: 410087041}
   - {fileID: 832575519}
+  - {fileID: 554255595}
+  - {fileID: 1909201866}
   - {fileID: 920801446761629653}
   - {fileID: 937564035}
   - {fileID: 1797218278}
