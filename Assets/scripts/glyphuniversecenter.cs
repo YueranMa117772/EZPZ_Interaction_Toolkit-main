@@ -15,6 +15,11 @@ public class glyphuniversecenter : MonoBehaviour
 
     float currentoffset = 0f;
 
+    void Start()
+    {
+        updateuniversecenter();
+    }
+
     public void spawnglyph(string character)
     {
         if (universecenter == null) return;
