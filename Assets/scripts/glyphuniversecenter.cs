@@ -23,26 +23,14 @@ public class glyphuniversecenter : MonoBehaviour
 
         updateuniversecenter();
 
-        glyphadvance a = glyphprefab.GetComponent<glyphadvance>();
-        if (a == null) return;
-
-        currentoffset += a.advance;
-
-        if (carriage != null)
-            carriage.setoffset(currentoffset);
-
-        Vector3 spawnpos =
-            universecenter.position +
-            universecenter.right * currentoffset;
-
-        if (!isinsidepaperarea(spawnpos)) return;
+        if (!isinsidepaperarea(universecenter.position)) return;
 
         Quaternion glyphrot =
             universecenter.rotation * Quaternion.Euler(0f, 180f, 0f);
 
         GameObject g = Instantiate(
             glyphprefab,
-            spawnpos,
+            universecenter.position,
             glyphrot,
             glyphboardroot
         );
@@ -51,6 +39,14 @@ public class glyphuniversecenter : MonoBehaviour
         if (t == null) t = g.GetComponentInChildren<TMP_Text>();
 
         if (t != null) t.text = character;
+
+        glyphadvance a = glyphprefab.GetComponent<glyphadvance>();
+        if (a == null) return;
+
+        currentoffset += a.advance;
+
+        if (carriage != null)
+            carriage.setoffset(currentoffset);
     }
 
     public void backspace()
@@ -72,18 +68,7 @@ public class glyphuniversecenter : MonoBehaviour
     bool isinsidepaperarea(Vector3 worldpos)
     {
         if (glyphpaperarea == null) return true;
-
-        Vector3 localPoint = glyphpaperarea.transform.InverseTransformPoint(worldpos);
-        Vector3 halfSize = glyphpaperarea.size * 0.5f;
-        Vector3 center = glyphpaperarea.center;
-
-        Vector3 min = center - halfSize;
-        Vector3 max = center + halfSize;
-
-        return
-            localPoint.x >= min.x && localPoint.x <= max.x &&
-            localPoint.y >= min.y && localPoint.y <= max.y &&
-            localPoint.z >= min.z && localPoint.z <= max.z;
+        return glyphpaperarea.bounds.Contains(worldpos);
     }
 
     void updateuniversecenter()
