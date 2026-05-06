@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5608537160180213371}
   - component: {fileID: -6707073338722241855}
   m_Layer: 0
-  m_Name: glyph
+  m_Name: Glyph
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -136,13 +136,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.1
-  m_fontSizeBase: 0.1
+  m_fontSize: 0.15
+  m_fontSizeBase: 0.15
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -196,4 +196,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee0b8410e2e35744ab1e55740d3d8663, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::glyphadvance
-  advance: 0.02
+  Advance: 0.02
