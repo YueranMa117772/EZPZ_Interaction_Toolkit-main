@@ -3,17 +3,15 @@ using UnityEngine.AI;
 using UnityEngine.Events;
 
 /// <summary>
-/// Controls the cashier NavMesh walking sequence.
-/// The cashier follows the user's position point, enters StandAtUser after first arrival,
-/// keeps following the user while in StandAtUser, and only leaves that state when externally triggered.
-/// Object switches such as board visibility and paper visibility should be handled through UnityEvents.
+/// Controls the cashier walking sequence.
+/// The cashier walks to the user position point, faces the user while standing,
+/// then leaves only when ContinueFromUser is called.
 /// </summary>
 [RequireComponent(typeof(NavMeshAgent))]
 public class NMAWalkModified : MonoBehaviour
 {
     private enum CashierWalkState
     {
-        Idle,
         WalkToUser,
         StandAtUser,
         WalkToPaper,
@@ -21,214 +19,229 @@ public class NMAWalkModified : MonoBehaviour
         StandAtTypewriter
     }
 
-    [Header("Navigation Targets")]
-    [Tooltip("Moving position point attached to or placed near the user. The cashier keeps following this point during StandAtUser.")]
+    [Header("Targets")]
+    [Tooltip("Position point the cashier walks to near the user.")]
     public Transform UserPositionPoint;
 
-    [Tooltip("Target point where the cashier walks to collect or reach the paper.")]
+    [Tooltip("Target the cashier faces while standing at the user. Usually the user body, head, XR camera, or player root.")]
+    public Transform UserLookTarget;
+
+    [Tooltip("Position point where the cashier walks to reach the paper.")]
     public Transform PaperTargetPoint;
 
-    [Tooltip("Target point where the cashier stops near the typewriter.")]
+    [Tooltip("Position point where the cashier walks to reach the typewriter.")]
     public Transform TypewriterTargetPoint;
 
-    [Header("Movement Settings")]
-    [Tooltip("Normal walking speed used before carrying paper.")]
-    public float NormalWalkSpeed = 1.8f;
-
-    [Tooltip("Slower walking speed used when walking with paper.")]
-    public float PaperWalkSpeed = 0.8f;
-
-    [Tooltip("Extra distance added to the NavMeshAgent stopping distance when checking arrival.")]
-    public float ArriveTolerance = 0.15f;
+    [Header("Movement")]
+    [Tooltip("Rotation speed used only while standing at the user.")]
+    public float StandFaceRotationSpeed = 8f;
 
     [Header("Events")]
-    [Tooltip("Called once when the cashier first reaches the user and enters StandAtUser.")]
+    [Tooltip("Called once when the cashier reaches the user and enters StandAtUser.")]
     public UnityEvent OnStandAtUser;
 
-    [Tooltip("Called when an external interaction ends StandAtUser and the cashier starts walking to the paper.")]
+    [Tooltip("Called when ContinueFromUser is called and the cashier leaves the user.")]
     public UnityEvent OnLeaveUser;
 
-    [Tooltip("Called when the cashier arrives at the paper point.")]
+    [Tooltip("Called when the cashier reaches the paper point.")]
     public UnityEvent OnArrivePaper;
 
-    [Tooltip("Called when the cashier starts walking toward the typewriter with paper.")]
-    public UnityEvent OnWalkWithPaper;
-
-    [Tooltip("Called when the cashier arrives at the typewriter and enters StandAtTypewriter.")]
+    [Tooltip("Called when the cashier reaches the typewriter point.")]
     public UnityEvent OnStandAtTypewriter;
 
-    [Header("Graphics")]
+    [Header("Animator")]
     [Tooltip("Animator used by the cashier model.")]
     public Animator AvatarAnimator;
 
-    [Tooltip("Animator float parameter used to switch idle, normal walk, and paper walk.")]
+    [Tooltip("Animator float parameter used for idle/walk switching.")]
     public string SpeedString = "speed";
 
-    [Header("System Stuff")]
-    [Tooltip("The NavMeshAgent used to move the cashier.")]
-    public NavMeshAgent MyNma;
+    [Tooltip("Animator bool parameter used for normal walk / paper walk switching.")]
+    public string WithPaperString = "withPaper";
 
-    [Tooltip("Current cashier walking state. Visible for debugging.")]
-    [SerializeField] private CashierWalkState currentState = CashierWalkState.Idle;
+    [Header("State")]
+    [Tooltip("Current walking state. Visible for checking the sequence in Play Mode.")]
+    [SerializeField] private CashierWalkState currentState;
 
+    private NavMeshAgent myNma;
     private Transform currentTarget;
 
     private void Awake()
     {
-        MyNma = GetComponent<NavMeshAgent>();
+        myNma = GetComponent<NavMeshAgent>();
+        myNma.updateRotation = true;
     }
 
     private void Start()
     {
-        WalkToUser();
+        SetPaperMode(false);
+        MoveTo(UserPositionPoint, CashierWalkState.WalkToUser);
     }
 
     private void Update()
     {
-        UpdateMovingTarget();
+        UpdateTargetPosition();
         UpdateState();
-        HandleAvatar();
+        UpdateStandFacing();
+        UpdateAnimator();
     }
 
     /// <summary>
-    /// Starts the first movement.
-    /// The cashier follows the user's moving position point.
-    /// </summary>
-    public void WalkToUser()
-    {
-        MoveToTarget(UserPositionPoint, NormalWalkSpeed, CashierWalkState.WalkToUser);
-    }
-
-    /// <summary>
-    /// External trigger used to end StandAtUser.
-    /// Connect InteractableGeneral.onPrimaryInteract or onPrimaryInteractLift to this method.
+    /// Ends StandAtUser and starts walking to the paper point.
+    /// This should be called by an external interaction event.
     /// </summary>
     public void ContinueFromUser()
     {
         if (currentState != CashierWalkState.StandAtUser) return;
 
         OnLeaveUser.Invoke();
-        MoveToTarget(PaperTargetPoint, NormalWalkSpeed, CashierWalkState.WalkToPaper);
+        MoveTo(PaperTargetPoint, CashierWalkState.WalkToPaper);
     }
 
     /// <summary>
-    /// Starts walking to the typewriter using the paper walking speed.
+    /// Starts moving to a target.
+    /// Paper point is treated as a passing point, so auto braking is disabled there.
     /// </summary>
-    private void WalkToTypewriter()
+    private void MoveTo(Transform target, CashierWalkState nextState)
     {
-        OnWalkWithPaper.Invoke();
-        MoveToTarget(TypewriterTargetPoint, PaperWalkSpeed, CashierWalkState.WalkToTypewriter);
-    }
-
-    /// <summary>
-    /// Sets the current target, speed, and walking state.
-    /// The actual destination is refreshed every frame by UpdateMovingTarget().
-    /// </summary>
-    private void MoveToTarget(Transform target, float speed, CashierWalkState nextState)
-    {
-        if (target == null)
-        {
-            Debug.LogWarning("NMAWalkModified: Target point is not assigned.");
-            return;
-        }
-
         currentTarget = target;
-
-        MyNma.speed = speed;
-        MyNma.isStopped = false;
-        MyNma.SetDestination(currentTarget.position);
-
         currentState = nextState;
+
+        myNma.isStopped = false;
+        myNma.updateRotation = true;
+        myNma.autoBraking = nextState != CashierWalkState.WalkToPaper;
+        myNma.SetDestination(currentTarget.position);
     }
 
     /// <summary>
-    /// Keeps the NavMeshAgent destination locked to the current target Transform.
-    /// This allows the cashier to keep following the moving user position point during StandAtUser.
+    /// Keeps the destination locked to the current target.
+    /// This allows the cashier to keep following the moving user position point.
     /// </summary>
-    private void UpdateMovingTarget()
+    private void UpdateTargetPosition()
     {
         if (currentTarget == null) return;
-        if (MyNma.isStopped) return;
+        if (myNma.isStopped) return;
 
-        MyNma.SetDestination(currentTarget.position);
+        myNma.SetDestination(currentTarget.position);
     }
 
     /// <summary>
-    /// Updates state transitions after the cashier reaches each target.
+    /// Handles state changes after reaching each target.
     /// </summary>
     private void UpdateState()
     {
         switch (currentState)
         {
-            case CashierWalkState.Idle:
-                break;
-
             case CashierWalkState.WalkToUser:
-                if (HasArrived())
-                {
-                    currentState = CashierWalkState.StandAtUser;
-                    OnStandAtUser.Invoke();
-                }
-                break;
+                if (!HasStoppedAtTarget()) return;
 
-            case CashierWalkState.StandAtUser:
+                currentState = CashierWalkState.StandAtUser;
+                myNma.updateRotation = false;
+                OnStandAtUser.Invoke();
                 break;
 
             case CashierWalkState.WalkToPaper:
-                if (HasArrived())
-                {
-                    StopAgent();
-                    OnArrivePaper.Invoke();
-                    WalkToTypewriter();
-                }
+                if (!HasReachedDistance()) return;
+
+                OnArrivePaper.Invoke();
+                SetPaperMode(true);
+                MoveTo(TypewriterTargetPoint, CashierWalkState.WalkToTypewriter);
                 break;
 
             case CashierWalkState.WalkToTypewriter:
-                if (HasArrived())
-                {
-                    StopAgent();
-                    currentState = CashierWalkState.StandAtTypewriter;
-                    OnStandAtTypewriter.Invoke();
-                }
-                break;
+                if (!HasStoppedAtTarget()) return;
 
-            case CashierWalkState.StandAtTypewriter:
+                StopAgent();
+                SetPaperMode(false);
+                currentState = CashierWalkState.StandAtTypewriter;
+                OnStandAtTypewriter.Invoke();
                 break;
         }
     }
 
     /// <summary>
-    /// Stops the NavMeshAgent and clears the current path.
-    /// This is only used for fixed destinations, not for StandAtUser.
+    /// Faces the user only while standing at the user.
     /// </summary>
-    private void StopAgent()
+    private void UpdateStandFacing()
     {
-        MyNma.isStopped = true;
-        MyNma.ResetPath();
-        currentTarget = null;
+        if (currentState != CashierWalkState.StandAtUser) return;
+
+        Transform target = UserLookTarget != null ? UserLookTarget : UserPositionPoint;
+        FaceTarget(target);
     }
 
     /// <summary>
-    /// Checks whether the cashier has arrived at the current destination.
+    /// Rotates this object toward a target on the horizontal plane.
     /// </summary>
-    private bool HasArrived()
+    private void FaceTarget(Transform target)
     {
-        if (MyNma.pathPending) return false;
-        if (MyNma.remainingDistance > MyNma.stoppingDistance + ArriveTolerance) return false;
-        if (MyNma.velocity.sqrMagnitude > 0.01f) return false;
+        if (target == null) return;
+
+        Vector3 direction = target.position - transform.position;
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude <= 0.001f) return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            StandFaceRotationSpeed * Time.deltaTime
+        );
+    }
+
+    /// <summary>
+    /// Checks whether the NavMeshAgent is within stopping distance of the current destination.
+    /// Used for passing through the paper point without waiting for full stop.
+    /// </summary>
+    private bool HasReachedDistance()
+    {
+        if (myNma.pathPending) return false;
+        if (myNma.remainingDistance > myNma.stoppingDistance) return false;
 
         return true;
     }
 
     /// <summary>
-    /// Sends the NavMeshAgent movement speed to the Animator.
-    /// The Animator uses this speed value to switch between standing, normal walking, and paper walking.
+    /// Checks whether the NavMeshAgent has reached and stopped at the current destination.
+    /// Used for final standing states.
     /// </summary>
-    private void HandleAvatar()
+    private bool HasStoppedAtTarget()
+    {
+        if (!HasReachedDistance()) return false;
+        if (myNma.velocity.sqrMagnitude > 0.01f) return false;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Stops movement and clears the current target.
+    /// </summary>
+    private void StopAgent()
+    {
+        myNma.isStopped = true;
+        myNma.ResetPath();
+        currentTarget = null;
+    }
+
+    /// <summary>
+    /// Sets the Animator paper state.
+    /// </summary>
+    private void SetPaperMode(bool hasPaper)
     {
         if (AvatarAnimator == null) return;
 
-        float currentSpeed = MyNma.velocity.magnitude;
-        AvatarAnimator.SetFloat(SpeedString, currentSpeed);
+        AvatarAnimator.SetBool(WithPaperString, hasPaper);
+    }
+
+    /// <summary>
+    /// Sends NavMeshAgent movement speed to the Animator.
+    /// </summary>
+    private void UpdateAnimator()
+    {
+        if (AvatarAnimator == null) return;
+
+        AvatarAnimator.SetFloat(SpeedString, myNma.velocity.magnitude);
     }
 }
