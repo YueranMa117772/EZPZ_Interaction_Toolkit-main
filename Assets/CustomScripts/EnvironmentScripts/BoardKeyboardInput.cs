@@ -16,6 +16,9 @@ public class BoardKeyboardInput : MonoBehaviour
     [Tooltip("Maximum number of characters allowed on the board.")]
     public int MaxCharacters = 60;
 
+    [Tooltip("Maximum number of characters allowed on one line before Enter is required.")]
+    public int MaxCharactersPerLine = 20;
+
     [Tooltip("Whether keyboard typing is currently allowed.")]
     public bool CanType = true;
 
@@ -88,6 +91,8 @@ public class BoardKeyboardInput : MonoBehaviour
 
         if (c != '\n' && !IsAllowedCharacter(c)) return;
 
+        if (c != '\n' && GetCurrentLineLength() >= MaxCharactersPerLine) return;
+
         currentText += c;
         UpdateDisplay();
     }
@@ -100,6 +105,21 @@ public class BoardKeyboardInput : MonoBehaviour
         if (char.IsLetterOrDigit(c)) return true;
 
         return allowedSymbols.Contains(c);
+    }
+
+    /// <summary>
+    /// Returns the number of characters on the current line.
+    /// </summary>
+    private int GetCurrentLineLength()
+    {
+        int lastNewLineIndex = currentText.LastIndexOf('\n');
+
+        if (lastNewLineIndex < 0)
+        {
+            return currentText.Length;
+        }
+
+        return currentText.Length - lastNewLineIndex - 1;
     }
 
     private void DeleteLastCharacter()
@@ -132,5 +152,13 @@ public class BoardKeyboardInput : MonoBehaviour
     {
         currentText = "";
         UpdateDisplay();
+    }
+
+    /// <summary>
+    /// Sets whether keyboard typing is currently allowed.
+    /// </summary>
+    public void SetCanType(bool canType)
+    {
+        CanType = canType;
     }
 }

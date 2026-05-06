@@ -1,10 +1,11 @@
+using StarterAssets;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 
 /// <summary>
 /// Controls the cashier walking sequence.
-/// The cashier walks to the user position point, faces the user while standing,
+/// The cashier walks to the user position point, faces the user while walking and standing,
 /// then leaves only when ContinueFromUser is called.
 /// </summary>
 [RequireComponent(typeof(NavMeshAgent))]
@@ -23,7 +24,7 @@ public class NMAWalkModified : MonoBehaviour
     [Tooltip("Position point the cashier walks to near the user.")]
     public Transform UserPositionPoint;
 
-    [Tooltip("Target the cashier faces while standing at the user. Usually the user body, head, XR camera, or player root.")]
+    [Tooltip("Target the cashier faces while walking to and standing at the user. Usually the user body, head, XR camera, or player root.")]
     public Transform UserLookTarget;
 
     [Tooltip("Position point where the cashier walks to reach the paper.")]
@@ -32,8 +33,12 @@ public class NMAWalkModified : MonoBehaviour
     [Tooltip("Position point where the cashier walks to reach the typewriter.")]
     public Transform TypewriterTargetPoint;
 
+    [Header("User Control")]
+    [Tooltip("FirstPersonController used to lock user movement while standing at the user.")]
+    public FirstPersonController UserController;
+
     [Header("Movement")]
-    [Tooltip("Rotation speed used only while standing at the user.")]
+    [Tooltip("Rotation speed used when facing the user.")]
     public float StandFaceRotationSpeed = 8f;
 
     [Header("Events")]
@@ -69,7 +74,6 @@ public class NMAWalkModified : MonoBehaviour
     private void Awake()
     {
         myNma = GetComponent<NavMeshAgent>();
-        myNma.updateRotation = true;
     }
 
     private void Start()
@@ -82,7 +86,7 @@ public class NMAWalkModified : MonoBehaviour
     {
         UpdateTargetPosition();
         UpdateState();
-        UpdateStandFacing();
+        UpdateUserFacing();
         UpdateAnimator();
     }
 
@@ -94,7 +98,9 @@ public class NMAWalkModified : MonoBehaviour
     {
         if (currentState != CashierWalkState.StandAtUser) return;
 
+        SetUserMovementLocked(false);
         OnLeaveUser.Invoke();
+
         MoveTo(PaperTargetPoint, CashierWalkState.WalkToPaper);
     }
 
@@ -104,18 +110,23 @@ public class NMAWalkModified : MonoBehaviour
     /// </summary>
     private void MoveTo(Transform target, CashierWalkState nextState)
     {
+        if (target == null) return;
+
         currentTarget = target;
         currentState = nextState;
 
         myNma.isStopped = false;
-        myNma.updateRotation = true;
+
+        // WalkToUser uses custom facing, so NavMeshAgent must not rotate the model.
+        myNma.updateRotation = nextState != CashierWalkState.WalkToUser;
+
         myNma.autoBraking = nextState != CashierWalkState.WalkToPaper;
         myNma.SetDestination(currentTarget.position);
     }
 
     /// <summary>
     /// Keeps the destination locked to the current target.
-    /// This allows the cashier to keep following the moving user position point.
+    /// This allows the cashier to keep following the moving user position point before arriving.
     /// </summary>
     private void UpdateTargetPosition()
     {
@@ -135,8 +146,12 @@ public class NMAWalkModified : MonoBehaviour
             case CashierWalkState.WalkToUser:
                 if (!HasStoppedAtTarget()) return;
 
+                StopAgent();
                 currentState = CashierWalkState.StandAtUser;
+
                 myNma.updateRotation = false;
+
+                SetUserMovementLocked(true);
                 OnStandAtUser.Invoke();
                 break;
 
@@ -153,6 +168,7 @@ public class NMAWalkModified : MonoBehaviour
 
                 StopAgent();
                 SetPaperMode(false);
+
                 currentState = CashierWalkState.StandAtTypewriter;
                 OnStandAtTypewriter.Invoke();
                 break;
@@ -160,11 +176,15 @@ public class NMAWalkModified : MonoBehaviour
     }
 
     /// <summary>
-    /// Faces the user only while standing at the user.
+    /// Faces the user while walking to the user and while standing at the user.
     /// </summary>
-    private void UpdateStandFacing()
+    private void UpdateUserFacing()
     {
-        if (currentState != CashierWalkState.StandAtUser) return;
+        if (currentState != CashierWalkState.WalkToUser &&
+            currentState != CashierWalkState.StandAtUser)
+        {
+            return;
+        }
 
         Transform target = UserLookTarget != null ? UserLookTarget : UserPositionPoint;
         FaceTarget(target);
@@ -189,6 +209,16 @@ public class NMAWalkModified : MonoBehaviour
             targetRotation,
             StandFaceRotationSpeed * Time.deltaTime
         );
+    }
+
+    /// <summary>
+    /// Locks or unlocks user movement while keeping camera rotation available.
+    /// </summary>
+    private void SetUserMovementLocked(bool locked)
+    {
+        if (UserController == null) return;
+
+        UserController.SetMovementLocked(locked);
     }
 
     /// <summary>

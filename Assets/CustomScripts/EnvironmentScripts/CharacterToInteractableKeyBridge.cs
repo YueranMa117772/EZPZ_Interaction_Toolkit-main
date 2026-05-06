@@ -14,8 +14,8 @@ public class CharacterToInteractableKeyBridge : MonoBehaviour
     [Serializable]
     public class CharacterKeyBinding
     {
-        [Tooltip("Character sent by BoardTextAutoPlayer. Example: a, b, 1, ., ,")]
-        public char Character;
+        [Tooltip("Character sent by BoardTextAutoPlayer. Use \\n for Enter / newline.")]
+        public string Character = "";
 
         [Tooltip("The matching BoxCollider used as the target area for this character.")]
         public BoxCollider KeyCollider;
@@ -35,7 +35,7 @@ public class CharacterToInteractableKeyBridge : MonoBehaviour
     public float MoveSpeed = 0.5f;
 
     [Header("Character To Collider Bindings")]
-    [Tooltip("Assign each playable character to its matching BoxCollider.")]
+    [Tooltip("Assign each playable character to its matching BoxCollider. Use \\n for Enter.")]
     public List<CharacterKeyBinding> Bindings = new List<CharacterKeyBinding>();
 
     private Dictionary<char, CharacterKeyBinding> bindingLookup;
@@ -55,8 +55,9 @@ public class CharacterToInteractableKeyBridge : MonoBehaviour
         foreach (CharacterKeyBinding binding in Bindings)
         {
             if (binding.KeyCollider == null) continue;
+            if (string.IsNullOrEmpty(binding.Character)) continue;
 
-            char key = NormalizeCharacter(binding.Character);
+            char key = GetBindingCharacter(binding.Character);
 
             if (!bindingLookup.ContainsKey(key))
             {
@@ -67,6 +68,20 @@ public class CharacterToInteractableKeyBridge : MonoBehaviour
                 Debug.LogWarning("Duplicate character binding ignored: " + binding.Character, this);
             }
         }
+    }
+
+    /// <summary>
+    /// Converts Inspector text into the actual character used by playback.
+    /// Use \n in the Inspector to bind Enter / newline.
+    /// </summary>
+    private char GetBindingCharacter(string text)
+    {
+        if (text == "\\n")
+        {
+            return '\n';
+        }
+
+        return NormalizeCharacter(text[0]);
     }
 
     /// <summary>
