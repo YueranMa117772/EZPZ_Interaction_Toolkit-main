@@ -172,7 +172,6 @@ public class NMAWalkModified : MonoBehaviour
     private void UpdateTypewriterFacing()
     {
         if (currentState != CashierWalkState.StandAtTypewriter) return;
-        if (TypewriterTargetPoint == null) return;
 
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
@@ -183,8 +182,6 @@ public class NMAWalkModified : MonoBehaviour
 
     private void FaceTarget(Transform target)
     {
-        if (target == null) return;
-
         Vector3 direction = target.position - transform.position;
         direction.y = 0f;
 
@@ -220,15 +217,11 @@ public class NMAWalkModified : MonoBehaviour
 
     private void SetPaperMode(bool hasPaper)
     {
-        if (AvatarAnimator == null) return;
-
         AvatarAnimator.SetBool(WithPaperString, hasPaper);
     }
 
     private void UpdateAnimator()
     {
-        if (AvatarAnimator == null) return;
-
         AvatarAnimator.SetFloat(SpeedString, myNma.velocity.magnitude);
     }
 }
