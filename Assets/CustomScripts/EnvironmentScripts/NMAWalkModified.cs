@@ -10,6 +10,7 @@ public class NMAWalkModified : MonoBehaviour
 {
     private enum CashierWalkState
     {
+        StandAtGameStart,
         WalkToUser,
         StandAtUser,
         WalkToPaper,
@@ -28,6 +29,7 @@ public class NMAWalkModified : MonoBehaviour
     public float LeaveUserDelay = 1f;
 
     [Header("Events")]
+    public UnityEvent OnStandAtGameStart;
     public UnityEvent OnStandAtUser;
     public UnityEvent OnLeaveUser;
     public UnityEvent OnArrivePaper;
@@ -51,7 +53,9 @@ public class NMAWalkModified : MonoBehaviour
     private void Start()
     {
         SetPaperMode(false);
-        MoveTo(UserPositionPoint, CashierWalkState.WalkToUser);
+        StopAgent();
+        currentState = CashierWalkState.StandAtGameStart;
+        OnStandAtGameStart.Invoke();
     }
 
     private void Update()
@@ -60,6 +64,13 @@ public class NMAWalkModified : MonoBehaviour
         UpdateState();
         UpdateUserFacing();
         UpdateAnimator();
+    }
+
+    public void ContinueFromGameStart()
+    {
+        if (currentState != CashierWalkState.StandAtGameStart) return;
+
+        MoveTo(UserPositionPoint, CashierWalkState.WalkToUser);
     }
 
     public void ContinueFromUser()
