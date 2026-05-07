@@ -63,6 +63,7 @@ public class NMAWalkModified : MonoBehaviour
         UpdateTargetPosition();
         UpdateState();
         UpdateUserFacing();
+        UpdateTypewriterFacing();
         UpdateAnimator();
     }
 
@@ -147,6 +148,7 @@ public class NMAWalkModified : MonoBehaviour
                 if (!Stopped()) return;
 
                 StopAgent();
+                myNma.updateRotation = false;
                 SetPaperMode(false);
 
                 currentState = CashierWalkState.StandAtTypewriter;
@@ -165,6 +167,18 @@ public class NMAWalkModified : MonoBehaviour
 
         Transform target = UserLookTarget != null ? UserLookTarget : UserPositionPoint;
         FaceTarget(target);
+    }
+
+    private void UpdateTypewriterFacing()
+    {
+        if (currentState != CashierWalkState.StandAtTypewriter) return;
+        if (TypewriterTargetPoint == null) return;
+
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            TypewriterTargetPoint.rotation,
+            StandFaceRotationSpeed * Time.deltaTime
+        );
     }
 
     private void FaceTarget(Transform target)

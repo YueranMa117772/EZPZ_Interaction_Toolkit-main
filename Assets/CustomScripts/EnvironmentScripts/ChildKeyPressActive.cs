@@ -6,12 +6,17 @@ public class ChildKeyPressActive : MonoBehaviour
     public GameObject PressedSfx;
     public GameObject ReleasedSfx;
 
+    public GameObject ExcludeObject;
+
     private void Start()
     {
         InteractableGeneral[] keys = GetComponentsInChildren<InteractableGeneral>();
 
         foreach (InteractableGeneral key in keys)
         {
+            if (ExcludeObject != null && key.transform.IsChildOf(ExcludeObject.transform))
+                continue;
+
             key.onPrimaryInteract.AddListener(Press);
             key.onPrimaryInteractLift.AddListener(Release);
         }
