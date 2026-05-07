@@ -5,6 +5,7 @@ public class ColourBlinkShiftSwitch : MonoBehaviour
 {
     public ColourBlinkShift BlinkScript;
     public bool IsOn;
+    public Color OffColour;
 
     private void Start()
     {
@@ -26,6 +27,6 @@ public class ColourBlinkShiftSwitch : MonoBehaviour
     private void TurnEmissionOff()
     {
         BlinkScript.MyMaterial.SetColor("_EmissionColor", Color.black);
-        BlinkScript.MyMaterial.color = BlinkScript.StartColour;
+        BlinkScript.MyMaterial.color = OffColour;
     }
 }
