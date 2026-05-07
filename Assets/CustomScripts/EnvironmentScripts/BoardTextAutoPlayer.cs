@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-/// Plays board text through key bridge.
+/// <summary>Plays board text through key bridge.</summary>
 public class BoardTextAutoPlayer : MonoBehaviour
 {
     public BoardKeyboardInput Board;
@@ -19,9 +19,6 @@ public class BoardTextAutoPlayer : MonoBehaviour
     public void PlayBoardText()
     {
         if (IsPlaying) return;
-        if (Board == null) return;
-        if (LeftKeyBridge == null) return;
-        if (RightKeyBridge == null) return;
 
         string text = Board.GetText();
 
