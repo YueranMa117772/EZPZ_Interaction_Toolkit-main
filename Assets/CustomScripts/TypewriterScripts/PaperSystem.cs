@@ -2,15 +2,10 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-/// <summary>
-/// Controls the front and back paper groups, and updates which papers are visible when a line is fed.
-/// </summary>
+/// Controls front and back papers.
 public class PaperSystem : MonoBehaviour
 {
-    [Tooltip("The parent object that contains the front paper objects.")]
     public Transform FrontRoot;
-
-    [Tooltip("The parent object that contains the back paper objects.")]
     public Transform BackRoot;
 
     private List<GameObject> frontPapers = new List<GameObject>();
@@ -56,9 +51,6 @@ public class PaperSystem : MonoBehaviour
         return 0;
     }
 
-    /// <summary>
-    /// Moves one paper from the back group to the front group.
-    /// </summary>
     public void FeedLine()
     {
         if (currentBack > 0)

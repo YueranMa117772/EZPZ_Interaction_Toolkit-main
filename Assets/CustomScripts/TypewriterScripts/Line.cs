@@ -1,15 +1,10 @@
 using UnityEngine;
 
-/// <summary>
-/// Updates a LineRenderer so it connects between a start pivot and an end pivot.
-/// </summary>
+/// Draws a line between two pivots.
 [RequireComponent(typeof(LineRenderer))]
 public class Line : MonoBehaviour
 {
-    [Tooltip("Start point of the rendered line.")]
     public Transform StartPivot;
-
-    [Tooltip("End point of the rendered line.")]
     public Transform EndPivot;
 
     private LineRenderer lineRenderer;

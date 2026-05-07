@@ -1,9 +1,6 @@
 using UnityEngine;
 
-/// <summary>
-/// Controls the press and return movement of a key object.
-/// Uses the nearest parent KeyPressGroup for shared movement settings.
-/// </summary>
+/// Moves a key when pressed.
 public class KeyPress : MonoBehaviour
 {
     private KeyPressGroup keyGroup;
@@ -35,17 +32,11 @@ public class KeyPress : MonoBehaviour
         );
     }
 
-    /// <summary>
-    /// Sets the key to the pressed state.
-    /// </summary>
     public void PressKey()
     {
         isPressed = true;
     }
 
-    /// <summary>
-    /// Sets the key to the released state.
-    /// </summary>
     public void ReleaseKey()
     {
         isPressed = false;

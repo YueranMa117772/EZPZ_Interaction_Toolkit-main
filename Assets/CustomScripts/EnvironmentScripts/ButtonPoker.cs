@@ -1,13 +1,8 @@
 using UnityEngine;
 
-/// <summary>
-/// Lets an NPC trigger an InteractableGeneral when this trigger collider touches it.
-/// Enter = primary interact.
-/// Exit = primary interact lift.
-/// </summary>
+/// NPC poker for InteractableGeneral.
 public class ButtonPoker : MonoBehaviour
 {
-    [Tooltip("The InteractableGeneral currently being touched by this poker.")]
     public InteractableGeneral subject;
 
     private void OnTriggerEnter(Collider other)

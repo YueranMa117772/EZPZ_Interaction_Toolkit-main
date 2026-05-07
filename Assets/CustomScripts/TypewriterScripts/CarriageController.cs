@@ -1,15 +1,9 @@
 using UnityEngine;
 
-/// <summary>
-/// Controls the carriage movement and the linked glyph board movement
-/// by applying horizontal offset and line offset targets.
-/// </summary>
+/// Controls carriage and glyph board movement.
 public class CarriageController : MonoBehaviour
 {
-    [Tooltip("Movement speed used when moving the carriage and glyph board toward their targets.")]
     public float MoveSpeed = 2f;
-
-    [Tooltip("Glyph board root that moves together with the carriage.")]
     public Transform GlyphBoardRoot;
 
     private Vector3 startLocalPosition;
@@ -53,27 +47,18 @@ public class CarriageController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Sets the current horizontal offset for the carriage system.
-    /// </summary>
     public void SetOffset(float offset)
     {
         currentXOffset = offset;
         UpdateTargets();
     }
 
-    /// <summary>
-    /// Sets the current line offset applied to the glyph board.
-    /// </summary>
     public void SetLineOffset(Vector3 offset)
     {
         currentLineOffset = offset;
         UpdateTargets();
     }
 
-    /// <summary>
-    /// Rebuilds the target positions for the carriage and glyph board.
-    /// </summary>
     private void UpdateTargets()
     {
         targetLocalPosition = startLocalPosition;

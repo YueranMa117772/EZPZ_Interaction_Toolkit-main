@@ -1,25 +1,15 @@
 using UnityEngine;
 using System.Collections;
 
-/// <summary>
-/// Controls a lever that rotates around a pivot when pulled, then returns to its original position.
-/// </summary>
+/// Rotates the line lever.
 public class LineLeverRotate : MonoBehaviour
 {
-    [Tooltip("The pivot point that the lever rotates around.")]
     public Transform Pivot;
-
-    [Tooltip("How far the lever rotates when pulled.")]
     public float RotateAngle = 25f;
-
-    [Tooltip("How fast the lever rotates.")]
     public float RotateSpeed = 200f;
 
     private bool isMoving;
 
-    /// <summary>
-    /// Starts the lever pull and return movement.
-    /// </summary>
     public void PullLever()
     {
         if (isMoving)

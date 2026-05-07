@@ -1,33 +1,17 @@
 ﻿using UnityEngine;
 using TMPro;
 
-/// <summary>
-/// Controls the glyph spawn position, creates glyph objects,
-/// and updates carriage offset based on glyph advance values.
-/// </summary>
+/// Spawns glyphs and moves the carriage.
 public class GlyphUniverseCenter : MonoBehaviour
 {
-    [Tooltip("Transform used as the glyph spawn point.")]
     public Transform UniverseCenter;
-
-    [Tooltip("Parent transform that holds all spawned glyph objects.")]
     public Transform GlyphBoardRoot;
-
-    [Tooltip("Prefab used to spawn each glyph.")]
     public GameObject GlyphPrefab;
-
-    [Tooltip("Paper area that limits where glyphs can be spawned.")]
     public BoxCollider GlyphPaperArea;
-
-    [Tooltip("Carriage controller that receives updated offset values.")]
     public CarriageController Carriage;
 
     private float currentOffset;
 
-    /// <summary>
-    /// Spawns a glyph with the given character at the current universe center position.
-    /// Updates the carriage offset using the glyph advance value.
-    /// </summary>
     public void SpawnGlyph(string character)
     {
         if (UniverseCenter == null)
@@ -92,9 +76,6 @@ public class GlyphUniverseCenter : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Moves the carriage backward using the glyph backspace advance value.
-    /// </summary>
     public void Backspace()
     {
         if (GlyphPrefab == null)
@@ -122,10 +103,6 @@ public class GlyphUniverseCenter : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Checks whether a world position is inside the allowed paper area.
-    /// If no paper area is assigned, spawning is allowed everywhere.
-    /// </summary>
     private bool IsInsidePaperArea(Vector3 worldPosition)
     {
         if (GlyphPaperArea == null)
