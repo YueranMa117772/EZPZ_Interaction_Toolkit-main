@@ -3,77 +3,50 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Receives characters from BoardTextAutoPlayer,
-/// finds the matching BoxCollider assigned in the Inspector,
-/// and moves the NPC finger target:
-/// move on XZ plane, press vertically, release vertically.
-/// </summary>
+/// Moves NPC target to typed keys.
 public class CharacterToInteractableKeyBridge : MonoBehaviour
 {
     [Serializable]
     public class CharacterKeyBinding
     {
-        [Tooltip("Character sent by BoardTextAutoPlayer. Use \\n for Enter / newline.")]
         public string Character = "";
-
-        [Tooltip("The matching BoxCollider used as the target area for this character.")]
         public BoxCollider KeyCollider;
     }
 
-    [Header("Target Point")]
-    [Tooltip("The IK target, hand target, or finger target that should move to the matched collider center.")]
     public Transform TargetPoint;
-
-    [Header("Key Press Group")]
-    [Tooltip("Shared key press settings used to synchronize the NPC finger with key movement.")]
     public KeyPressGroup KeyGroup;
 
-    [Header("Action Speed")]
-    [Tooltip("Speed used to move the target point on the XZ plane. Y height stays unchanged.")]
     [Min(0.001f)]
     public float MoveSpeed = 0.5f;
 
-    [Header("Character To Collider Bindings")]
-    [Tooltip("Assign each playable character to its matching BoxCollider. Use \\n for Enter.")]
+    [Header("Bindings")]
     public List<CharacterKeyBinding> Bindings = new List<CharacterKeyBinding>();
 
-    private Dictionary<char, CharacterKeyBinding> bindingLookup;
+    private Dictionary<char, BoxCollider> bindingLookup;
 
     private void Awake()
     {
         BuildLookup();
     }
 
-    /// <summary>
-    /// Builds the character lookup dictionary from the Inspector bindings.
-    /// </summary>
     private void BuildLookup()
     {
-        bindingLookup = new Dictionary<char, CharacterKeyBinding>();
+        bindingLookup = new Dictionary<char, BoxCollider>();
 
         foreach (CharacterKeyBinding binding in Bindings)
         {
-            if (binding.KeyCollider == null) continue;
             if (string.IsNullOrEmpty(binding.Character)) continue;
+            if (binding.KeyCollider == null) continue;
 
             char key = GetBindingCharacter(binding.Character);
 
             if (!bindingLookup.ContainsKey(key))
             {
-                bindingLookup.Add(key, binding);
-            }
-            else
-            {
-                Debug.LogWarning("Duplicate character binding ignored: " + binding.Character, this);
+                bindingLookup.Add(key, binding.KeyCollider);
             }
         }
     }
 
-    /// <summary>
-    /// Converts Inspector text into the actual character used by playback.
-    /// Use \n in the Inspector to bind Enter / newline.
-    /// </summary>
     private char GetBindingCharacter(string text)
     {
         if (text == "\\n")
@@ -84,12 +57,6 @@ public class CharacterToInteractableKeyBridge : MonoBehaviour
         return NormalizeCharacter(text[0]);
     }
 
-    /// <summary>
-    /// Plays one full character action.
-    /// Step 1: Move only on XZ plane, keeping the current Y height.
-    /// Step 2: Press only on Y axis, keeping XZ fixed.
-    /// Step 3: Release only on Y axis, returning to the original Y height.
-    /// </summary>
     public IEnumerator PlayCharacter(char c)
     {
         if (bindingLookup == null)
@@ -97,34 +64,17 @@ public class CharacterToInteractableKeyBridge : MonoBehaviour
             BuildLookup();
         }
 
+        if (TargetPoint == null) yield break;
+        if (KeyGroup == null) yield break;
+
         char key = NormalizeCharacter(c);
 
-        if (!bindingLookup.TryGetValue(key, out CharacterKeyBinding binding))
+        if (!bindingLookup.TryGetValue(key, out BoxCollider keyCollider))
         {
-            Debug.LogWarning("No collider binding found for character: " + c, this);
             yield break;
         }
 
-        if (TargetPoint == null)
-        {
-            Debug.LogWarning("TargetPoint is not assigned.", this);
-            yield break;
-        }
-
-        if (KeyGroup == null)
-        {
-            Debug.LogWarning("KeyGroup is not assigned.", this);
-            yield break;
-        }
-
-        if (binding.KeyCollider == null)
-        {
-            Debug.LogWarning("KeyCollider is missing for character: " + c, this);
-            yield break;
-        }
-
-        Vector3 colliderCenter = binding.KeyCollider.bounds.center;
-
+        Vector3 colliderCenter = keyCollider.bounds.center;
         float originalHeightY = TargetPoint.position.y;
 
         Vector3 moveStartPosition = TargetPoint.position;
@@ -156,9 +106,6 @@ public class CharacterToInteractableKeyBridge : MonoBehaviour
         yield return MoveTargetVertical(releaseStartPosition, releaseEndPosition, releaseSpeed);
     }
 
-    /// <summary>
-    /// Calculates the NPC finger press speed so its vertical press duration matches the shared key press duration.
-    /// </summary>
     private float GetSyncedPressSpeed(Vector3 startPosition, Vector3 endPosition)
     {
         float fingerDistance = Mathf.Abs(startPosition.y - endPosition.y);
@@ -167,9 +114,6 @@ public class CharacterToInteractableKeyBridge : MonoBehaviour
         return fingerDistance / keyPressTime;
     }
 
-    /// <summary>
-    /// Calculates the NPC finger release speed so its vertical release duration matches the shared key return duration.
-    /// </summary>
     private float GetSyncedReleaseSpeed(Vector3 startPosition, Vector3 endPosition)
     {
         float fingerDistance = Mathf.Abs(startPosition.y - endPosition.y);
@@ -178,10 +122,6 @@ public class CharacterToInteractableKeyBridge : MonoBehaviour
         return fingerDistance / keyReturnTime;
     }
 
-    /// <summary>
-    /// Moves the target point only on the XZ plane.
-    /// Y height is taken from the start position and remains unchanged.
-    /// </summary>
     private IEnumerator MoveTargetOnPlane(Vector3 startPosition, Vector3 endPosition, float speed)
     {
         if (TargetPoint == null) yield break;
@@ -206,10 +146,6 @@ public class CharacterToInteractableKeyBridge : MonoBehaviour
         TargetPoint.position = endPosition;
     }
 
-    /// <summary>
-    /// Moves the target point only vertically.
-    /// XZ position is taken from the start position and remains unchanged.
-    /// </summary>
     private IEnumerator MoveTargetVertical(Vector3 startPosition, Vector3 endPosition, float speed)
     {
         if (TargetPoint == null) yield break;
@@ -236,9 +172,6 @@ public class CharacterToInteractableKeyBridge : MonoBehaviour
         TargetPoint.position = endPosition;
     }
 
-    /// <summary>
-    /// Normalizes letters so A and a always use the same collider.
-    /// </summary>
     private char NormalizeCharacter(char c)
     {
         return char.ToLowerInvariant(c);
