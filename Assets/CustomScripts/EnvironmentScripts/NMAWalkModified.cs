@@ -1,3 +1,4 @@
+using System.Collections;
 using StarterAssets;
 using UnityEngine;
 using UnityEngine.AI;
@@ -41,11 +42,15 @@ public class NMAWalkModified : MonoBehaviour
     [Tooltip("Rotation speed used when facing the user.")]
     public float StandFaceRotationSpeed = 8f;
 
+    [Header("Stand Delay")]
+    [Tooltip("How long the cashier stays at the user after ContinueFromUser is called.")]
+    public float LeaveUserDelay = 1f;
+
     [Header("Events")]
     [Tooltip("Called once when the cashier reaches the user and enters StandAtUser.")]
     public UnityEvent OnStandAtUser;
 
-    [Tooltip("Called when ContinueFromUser is called and the cashier leaves the user.")]
+    [Tooltip("Called after the stand delay, when the cashier actually leaves the user.")]
     public UnityEvent OnLeaveUser;
 
     [Tooltip("Called when the cashier reaches the paper point.")]
@@ -70,6 +75,7 @@ public class NMAWalkModified : MonoBehaviour
 
     private NavMeshAgent myNma;
     private Transform currentTarget;
+    private bool isLeavingUser;
 
     private void Awake()
     {
@@ -91,17 +97,32 @@ public class NMAWalkModified : MonoBehaviour
     }
 
     /// <summary>
-    /// Ends StandAtUser and starts walking to the paper point.
+    /// Starts ending StandAtUser after a delay.
     /// This should be called by an external interaction event.
     /// </summary>
     public void ContinueFromUser()
     {
         if (currentState != CashierWalkState.StandAtUser) return;
+        if (isLeavingUser) return;
+
+        StartCoroutine(LeaveUserAfterDelay());
+    }
+
+    /// <summary>
+    /// Keeps the cashier standing at the user for a short time before leaving.
+    /// </summary>
+    private IEnumerator LeaveUserAfterDelay()
+    {
+        isLeavingUser = true;
+
+        yield return new WaitForSeconds(LeaveUserDelay);
 
         SetUserMovementLocked(false);
         OnLeaveUser.Invoke();
 
         MoveTo(PaperTargetPoint, CashierWalkState.WalkToPaper);
+
+        isLeavingUser = false;
     }
 
     /// <summary>

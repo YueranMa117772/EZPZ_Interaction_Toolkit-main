@@ -19,6 +19,9 @@ public class BoardKeyboardInput : MonoBehaviour
     [Tooltip("Maximum number of characters allowed on one line before Enter is required.")]
     public int MaxCharactersPerLine = 20;
 
+    [Tooltip("Maximum number of lines allowed on the board.")]
+    public int MaxLines = 3;
+
     [Tooltip("Whether keyboard typing is currently allowed.")]
     public bool CanType = true;
 
@@ -89,9 +92,18 @@ public class BoardKeyboardInput : MonoBehaviour
         if (c == '\r') return;
         if (c == '\b') return;
 
-        if (c != '\n' && !IsAllowedCharacter(c)) return;
+        if (c == '\n')
+        {
+            if (GetCurrentLineCount() >= MaxLines) return;
 
-        if (c != '\n' && GetCurrentLineLength() >= MaxCharactersPerLine) return;
+            currentText += c;
+            UpdateDisplay();
+            return;
+        }
+
+        if (!IsAllowedCharacter(c)) return;
+
+        if (GetCurrentLineLength() >= MaxCharactersPerLine) return;
 
         currentText += c;
         UpdateDisplay();
@@ -120,6 +132,24 @@ public class BoardKeyboardInput : MonoBehaviour
         }
 
         return currentText.Length - lastNewLineIndex - 1;
+    }
+
+    /// <summary>
+    /// Returns the current number of lines on the board.
+    /// </summary>
+    private int GetCurrentLineCount()
+    {
+        int lineCount = 1;
+
+        foreach (char c in currentText)
+        {
+            if (c == '\n')
+            {
+                lineCount++;
+            }
+        }
+
+        return lineCount;
     }
 
     private void DeleteLastCharacter()
