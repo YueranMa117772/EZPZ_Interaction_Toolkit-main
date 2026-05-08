@@ -22,7 +22,11 @@ public class BoardTextAutoPlayer : MonoBehaviour
 
         string text = Board.GetText();
 
-        if (string.IsNullOrEmpty(text)) return;
+        if (string.IsNullOrEmpty(text))
+        {
+            OnPlaybackComplete.Invoke();
+            return;
+        }
 
         StartCoroutine(PlayTextRoutine(text));
     }
