@@ -41374,12 +41374,12 @@ GameObject:
   - component: {fileID: 1418758904}
   - component: {fileID: 1418758905}
   m_Layer: 0
-  m_Name: Use your keyboard to tell us. You can use Enter and Shift.
+  m_Name: Use your keyboard.
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1418758904
 Transform:
   m_ObjectHideFlags: 0
@@ -41406,7 +41406,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 18722858947c40e49a2f4feab934f3bf, type: 3}
+  m_Resource: {fileID: 8300000, guid: 38645a9e465aed647a87e70ee24dd438, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.8
   m_Pitch: 1
@@ -48152,8 +48152,8 @@ Transform:
   m_GameObject: {fileID: 1535340658}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.004, y: -0.19197822, z: -0.3924}
-  m_LocalScale: {x: 0.1171671, y: 0.07858411, z: 0.010277428}
+  m_LocalPosition: {x: -0.004, y: -0.19197822, z: -0.405}
+  m_LocalScale: {x: 0.14316648, y: 0.09602193, z: 0.012557989}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 163818652}
