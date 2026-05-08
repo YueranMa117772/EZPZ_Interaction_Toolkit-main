@@ -1,20 +1,11 @@
 using TMPro;
 using UnityEngine;
 
-/// <summary>
-/// Switches the board TMP text between normal and confirmed material presets.
-/// </summary>
+/// Switches board text material.
 public class BoardTextMaterialSwitcher : MonoBehaviour
 {
-    [Header("Text")]
-    [Tooltip("The TMP text shown on the board.")]
     public TMP_Text BoardText;
-
-    [Header("Material Presets")]
-    [Tooltip("Material used while the text is still editable.")]
     public Material NormalMaterial;
-
-    [Tooltip("Material used after the text has been confirmed.")]
     public Material ConfirmedMaterial;
 
     private void Start()
