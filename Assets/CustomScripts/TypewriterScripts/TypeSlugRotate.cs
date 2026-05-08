@@ -5,8 +5,8 @@ public class TypeSlugRotate : MonoBehaviour
 {
     public Transform Pivot;
     public float RotateAngle = 30f;
-    public float RotateSpeed = 200f;
-    public float ReturnSpeed = 200f;
+    public float RotateSpeed = 600f;
+    public float ReturnSpeed = 600f;
 
     private float currentAngle;
     private bool isPressed;
